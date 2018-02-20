@@ -1,0 +1,9 @@
+on choisi les piza 
+
+taille : normal, grand
+mozacrust : bool
+sauce : pas de sauce, tomate, bbq, creme fraiche
+jambon : bool
+fromage : bool
+champignon : bool
+ananas : non
