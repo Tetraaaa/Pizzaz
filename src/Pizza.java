@@ -18,10 +18,6 @@ public class Pizza {
 		this.champignon = champignon;
 	}
 	
-	public Pizza(){
-		
-	}
-	
 	@Override
 	public String toString(){
 		
