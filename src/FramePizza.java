@@ -99,7 +99,104 @@ public class FramePizza extends JFrame
 		setExtendedState(JFrame.MAXIMIZED_BOTH);
 		setLocationRelativeTo(null);
 		setVisible(true);
+		
+		
+		//////////////////////////////////////////////////////////////////////////////
+		//Weka cancer
+		//////////////////////////////////////////////////////////////////////////////
+		
+		
+		
+		 // Declare two numeric attributes
+		 Attribute Sauce = new Attribute(“sauce”);
+		 Attribute Mozzacrust = new Attribute(“mozzacrust”);
+		 
+		 // Declare a nominal attribute along with its values
+		 FastVector fvSauce = new FastVector(4);
+		 fvSauce.addElement(“tomate”);
+		 fvSauce.addElement(“barbecue”);
+		 fvSauce.addElement(“cremefraiche”);
+		 fvSauce.addElement(“pasdesauce”);
+		 Attribute Attribute3 = new Attribute(“aNominal”, fvSauce);
+		 
+		 // Declare the class attribute along with its values
+		 FastVector fvMozzacrust = new FastVector(2);
+		 fvMozzacrust.addElement(“positive”);
+		 fvMozzacrust.addElement(“negative”);
+		 Attribute ClassAttribute = new Attribute(“theClass”, fvMozzacrust);
+		 
+		 // Declare the feature vector
+		 FastVector fvWekaAttributes = new FastVector(5);
+		 fvWekaAttributes.addElement(Attribute1);
+		 fvWekaAttributes.addElement(Attribute2);
+		 fvWekaAttributes.addElement(Attribute3);
+		 fvWekaAttributes.addElement(ClassAttribute);
+		 
+		 
+		 
+		// Create an empty training set
+		 Instances isTrainingSet = new Instances("Rel", fvWekaAttributes, 10);
+		 // Set class index
+		 isTrainingSet.setClassIndex(3);
+		 
+		 
+		 
+		 
+		 
+		 // Create the instance
+		 Instance iExample = new DenseInstance(4);
+		 iExample.setValue((Attribute)fvWekaAttributes.elementAt(0), 1.0);
+		 iExample.setValue((Attribute)fvWekaAttributes.elementAt(1), 0.5);
+		 iExample.setValue((Attribute)fvWekaAttributes.elementAt(2), "tomate");
+		 iExample.setValue((Attribute)fvWekaAttributes.elementAt(3), "positive");
+		 
+		 // add the instance
+		 isTrainingSet.add(iExample);
+		 
+		 
+		 
+		 
+		 
+		 
+		 
+		 // Create a naïve bayes classifier
+		 Classifier cModel = (Classifier)new NaiveBayes();
+		 cModel.buildClassifier(isTrainingSet);
+		 
+		 
+		 
+		 
+		 
+		 
+		// Test the model
+		 Evaluation eTest = new Evaluation(isTrainingSet);
+		 eTest.evaluateModel(cModel, isTestingSet);
+		 
+		 
+		 
+		// Print the result à la Weka explorer:
+		 String strSummary = eTest.toSummaryString();
+		 System.out.println(strSummary);
+		 
+		 // Get the confusion matrix
+		 double[][] cmMatrix = eTest.confusionMatrix();
+		 
+		 
+		 
+		 
+		// Specify that the instance belong to the training set
+		 // in order to inherit from the set description
+		 iUse.setDataset(isTrainingSet);
+		 
+		 // Get the likelihood of each classes
+		 // fDistribution[0] is the probability of being “positive”
+		 // fDistribution[1] is the probability of being “negative”
+		 double[] fDistribution = cModel.distributionForInstance(iUse);
+
+		 System.out.prinln("cancer");
 	}
+	
+	
 		
 
 	/**
