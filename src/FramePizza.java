@@ -1,17 +1,24 @@
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.GraphicsEnvironment;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.util.ArrayList;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
 
 @SuppressWarnings("serial")
@@ -19,6 +26,7 @@ public class FramePizza extends JFrame
 {
 	ArrayList<Pizza> listePizzas;
 	JPanel panelPizzas;
+	ArrayList<JLabel> images = new ArrayList<JLabel>();
 	
 	public FramePizza(int nbPizzas)
 	{
@@ -43,11 +51,16 @@ public class FramePizza extends JFrame
 
 					@Override
 					public void actionPerformed(ActionEvent arg0) {
-						for(Component b : panelPizzas.getComponents())
+						for(JLabel j : images)
 						{
-							if(b.getClass() == JButton.class)
+							j.setIcon(new ImageIcon("src/Assets/red_bg.png"));
+							
+						}
+						for(Component c : panelPizzas.getComponents())
+						{
+							if(c.getClass() == JLayeredPane.class)
 							{
-								b.setBackground(Color.RED);
+								c.setBackground(Color.RED);
 							}
 						}
 						
@@ -95,30 +108,47 @@ public class FramePizza extends JFrame
 	 */
 	public void GenererPizzas(int nb)
 	{
+		int width = GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds().width;
+		int height = GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds().height;
+		
 		this.listePizzas = Pizza.generePizza(nb);
 		for (Pizza p : listePizzas)
 		{
-			JButton btn = new JButton(p.toString());
-			btn.setBackground(Color.RED);
-			btn.addActionListener(new ActionListener()
+			JLayeredPane jp = new JLayeredPane();
+			jp.setBackground(Color.RED);
+			jp.setToolTipText(p.toString());
+			jp.setSize(width/10,height/4);
+			System.out.println("width : " + jp.getWidth() + " height : " + jp.getHeight());
+			JLabel image = new JLabel(new ImageIcon("src/Assets/red_bg.png"));
+			JLabel text = new JLabel(new ImageIcon("src/Assets/test.png"));
+			
+			
+			
+			image.setSize(jp.getWidth(), jp.getHeight());
+			
+			images.add(image);
+			
+			text.setSize(173, 234);
+			jp.add(image, new Integer(-1));
+			jp.add(text, new Integer(0));
+			jp.addMouseListener(new MouseAdapter()
 					{
-
-						@Override
-						public void actionPerformed(ActionEvent arg0) 
-						{
-							if(btn.getBackground() == Color.RED)
-							{
-								btn.setBackground(Color.GREEN);
-								System.out.println(btn.getText());
-							}
-							else
-							{
-								btn.setBackground(Color.RED);
-							}
-						}
-				
+				public void mouseClicked(MouseEvent e)
+				{
+					if(jp.getBackground() == Color.RED)
+					{
+						image.setIcon(new ImageIcon("src/Assets/green_bg.png"));
+						jp.setBackground(Color.GREEN);
+						System.out.println(jp.getToolTipText());
+					}
+					else
+					{
+						image.setIcon(new ImageIcon("src/Assets/red_bg.png"));
+						jp.setBackground(Color.RED);
+					}
+				}
 					});
-			panelPizzas.add(btn);
+			panelPizzas.add(jp);
 		}
 		
 		System.out.println(listePizzas.size() + " pizzaz générées.");
