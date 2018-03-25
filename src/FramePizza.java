@@ -21,6 +21,15 @@ import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
 
+import weka.classifiers.Classifier;
+import weka.classifiers.Evaluation;
+import weka.classifiers.bayes.NaiveBayes;
+import weka.core.Attribute;
+import weka.core.DenseInstance;
+import weka.core.FastVector;
+import weka.core.Instance;
+import weka.core.Instances;
+
 @SuppressWarnings("serial")
 public class FramePizza extends JFrame
 {
@@ -100,7 +109,7 @@ public class FramePizza extends JFrame
 		setLocationRelativeTo(null);
 		setVisible(true);
 		
-		
+/*		
 		//////////////////////////////////////////////////////////////////////////////
 		//Weka cancer
 		//////////////////////////////////////////////////////////////////////////////
@@ -108,27 +117,27 @@ public class FramePizza extends JFrame
 		
 		
 		 // Declare two numeric attributes
-		 Attribute Sauce = new Attribute(“sauce”);
-		 Attribute Mozzacrust = new Attribute(“mozzacrust”);
+		 Attribute Sauce = new Attribute("sauce");
+		 Attribute Mozzacrust = new Attribute("mozzacrust");
 		 
 		 // Declare a nominal attribute along with its values
 		 FastVector fvSauce = new FastVector(4);
-		 fvSauce.addElement(“tomate”);
-		 fvSauce.addElement(“barbecue”);
-		 fvSauce.addElement(“cremefraiche”);
-		 fvSauce.addElement(“pasdesauce”);
-		 Attribute Attribute3 = new Attribute(“aNominal”, fvSauce);
+		 fvSauce.addElement("tomate");
+		 fvSauce.addElement("barbecue");
+		 fvSauce.addElement("cremefraiche");
+		 fvSauce.addElement("pasdesauce");
+		 Attribute Attribute3 = new Attribute("aNominal", fvSauce);
 		 
 		 // Declare the class attribute along with its values
 		 FastVector fvMozzacrust = new FastVector(2);
-		 fvMozzacrust.addElement(“positive”);
-		 fvMozzacrust.addElement(“negative”);
-		 Attribute ClassAttribute = new Attribute(“theClass”, fvMozzacrust);
+		 fvMozzacrust.addElement("positive");
+		 fvMozzacrust.addElement("negative");
+		 Attribute ClassAttribute = new Attribute("theClass", fvMozzacrust);
 		 
 		 // Declare the feature vector
 		 FastVector fvWekaAttributes = new FastVector(5);
-		 fvWekaAttributes.addElement(Attribute1);
-		 fvWekaAttributes.addElement(Attribute2);
+		 fvWekaAttributes.addElement(Sauce);
+		 fvWekaAttributes.addElement(Mozzacrust);
 		 fvWekaAttributes.addElement(Attribute3);
 		 fvWekaAttributes.addElement(ClassAttribute);
 		 
@@ -145,10 +154,10 @@ public class FramePizza extends JFrame
 		 
 		 // Create the instance
 		 Instance iExample = new DenseInstance(4);
-		 iExample.setValue((Attribute)fvWekaAttributes.elementAt(0), 1.0);
-		 iExample.setValue((Attribute)fvWekaAttributes.elementAt(1), 0.5);
-		 iExample.setValue((Attribute)fvWekaAttributes.elementAt(2), "tomate");
-		 iExample.setValue((Attribute)fvWekaAttributes.elementAt(3), "positive");
+		 iExample.setValue((Attribute)fvWekaAttributes.get(0), 1.0);
+		 iExample.setValue((Attribute)fvWekaAttributes.get(1), 0.5);
+		 iExample.setValue((Attribute)fvWekaAttributes.get(2), "tomate");
+		 iExample.setValue((Attribute)fvWekaAttributes.get(3), "positive");
 		 
 		 // add the instance
 		 isTrainingSet.add(iExample);
@@ -189,12 +198,14 @@ public class FramePizza extends JFrame
 		 iUse.setDataset(isTrainingSet);
 		 
 		 // Get the likelihood of each classes
-		 // fDistribution[0] is the probability of being “positive”
-		 // fDistribution[1] is the probability of being “negative”
+		 // fDistribution[0] is the probability of being "positive"
+		 // fDistribution[1] is the probability of being "negative"
 		 double[] fDistribution = cModel.distributionForInstance(iUse);
 
-		 System.out.prinln("cancer");
+		 System.out.println("cancer");
+		 */
 	}
+	
 	
 	
 		
@@ -216,18 +227,92 @@ public class FramePizza extends JFrame
 			jp.setToolTipText(p.toString());
 			jp.setSize(width/10,height/4);
 			System.out.println("width : " + jp.getWidth() + " height : " + jp.getHeight());
+			
+			
+			ArrayList<JLabel> layers = new ArrayList<JLabel>();
+			JLabel layerPate = new JLabel();
+			layerPate.setSize(192, 260);
+			if(p.getMozzaCrust())
+			{
+				layerPate.setIcon(new ImageIcon("src/Assets/MozzaCrust.png"));
+				layers.add(layerPate);
+			}
+			else
+			{
+				layerPate.setIcon(new ImageIcon("src/Assets/PateNormale.png"));
+				layers.add(layerPate);
+			}
+			JLabel layerSauce = new JLabel();
+			layerSauce.setSize(192, 260);
+			
+			if(p.getSauce() == Sauce.PasDeSauce)
+			{
+				layerSauce.setIcon(new ImageIcon("src/Assets/FondPasDeSauce.png"));
+				layers.add(layerSauce);
+			}
+			else if(p.getSauce() == Sauce.Tomate)
+			{
+				layerSauce.setIcon(new ImageIcon("src/Assets/FondTomate.png"));
+				layers.add(layerSauce);
+			}
+			else if(p.getSauce() == Sauce.Fraiche)
+			{
+				layerSauce.setIcon(new ImageIcon("src/Assets/FondCremeFraiche.png"));
+				layers.add(layerSauce);
+			}
+			else
+			{
+				layerSauce.setIcon(new ImageIcon("src/Assets/FondBarbecue.png"));
+				layers.add(layerSauce);
+			}
+			
+			if(p.getChampignon())
+			{
+				JLabel layerChampignonPignon = new JLabel();
+				layerChampignonPignon.setSize(192, 260);
+				layerChampignonPignon.setIcon(new ImageIcon("src/Assets/Champignons.png"));
+				layers.add(layerChampignonPignon);
+			}
+			
+			if(p.getJambon())
+			{
+				JLabel layerJambon = new JLabel();
+				layerJambon.setSize(192, 260);
+				layerJambon.setIcon(new ImageIcon("src/Assets/Jambon.png"));
+				layers.add(layerJambon);
+			}
+			
+			if(p.getGrandeTaille())
+			{
+				JLabel layerOlives = new JLabel();
+				layerOlives.setSize(192, 260);
+				layerOlives.setIcon(new ImageIcon("src/Assets/Olive.png"));
+				layers.add(layerOlives);
+			}
+			
+			if(p.getFromage())
+			{
+				JLabel layerFromage = new JLabel();
+				layerFromage.setSize(192, 260);
+				layerFromage.setIcon(new ImageIcon("src/Assets/Fromage.png"));
+				layers.add(layerFromage);
+			}
+
+			
 			JLabel image = new JLabel(new ImageIcon("src/Assets/red_bg.png"));
-			JLabel text = new JLabel(new ImageIcon("src/Assets/test.png"));
 			
 			
 			
 			image.setSize(jp.getWidth(), jp.getHeight());
-			
 			images.add(image);
 			
-			text.setSize(173, 234);
 			jp.add(image, new Integer(-1));
-			jp.add(text, new Integer(0));
+			
+			for(int i = 0; i<layers.size(); i++)
+			{
+				jp.add(layers.get(i), new Integer(i));
+			}
+
 			jp.addMouseListener(new MouseAdapter()
 					{
 				public void mouseClicked(MouseEvent e)
