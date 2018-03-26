@@ -108,17 +108,13 @@ public class FramePizza extends JFrame
 		setExtendedState(JFrame.MAXIMIZED_BOTH);
 		setLocationRelativeTo(null);
 		setVisible(true);
-		
-/*		
+	
 		//////////////////////////////////////////////////////////////////////////////
 		//Weka cancer
 		//////////////////////////////////////////////////////////////////////////////
 		
-		
-		
-		 // Declare two numeric attributes
-		 Attribute Sauce = new Attribute("sauce");
-		 Attribute Mozzacrust = new Attribute("mozzacrust");
+			
+		 
 		 
 		 // Declare a nominal attribute along with its values
 		 FastVector fvSauce = new FastVector(4);
@@ -126,84 +122,61 @@ public class FramePizza extends JFrame
 		 fvSauce.addElement("barbecue");
 		 fvSauce.addElement("cremefraiche");
 		 fvSauce.addElement("pasdesauce");
-		 Attribute Attribute3 = new Attribute("aNominal", fvSauce);
+		 Attribute attributSauce = new Attribute("sauce", fvSauce);
 		 
 		 // Declare the class attribute along with its values
 		 FastVector fvMozzacrust = new FastVector(2);
-		 fvMozzacrust.addElement("positive");
-		 fvMozzacrust.addElement("negative");
-		 Attribute ClassAttribute = new Attribute("theClass", fvMozzacrust);
+		 fvMozzacrust.addElement("true");
+		 fvMozzacrust.addElement("false");
+		 Attribute attributMozza = new Attribute("mozzacrust", fvMozzacrust);
 		 
 		 // Declare the feature vector
-		 FastVector fvWekaAttributes = new FastVector(5);
-		 fvWekaAttributes.addElement(Sauce);
-		 fvWekaAttributes.addElement(Mozzacrust);
-		 fvWekaAttributes.addElement(Attribute3);
-		 fvWekaAttributes.addElement(ClassAttribute);
+		 FastVector fvWekaAttributes = new FastVector(2);
+		 fvWekaAttributes.addElement(attributSauce);
+		 fvWekaAttributes.addElement(attributMozza);
 		 
 		 
 		 
 		// Create an empty training set
 		 Instances isTrainingSet = new Instances("Rel", fvWekaAttributes, 10);
 		 // Set class index
-		 isTrainingSet.setClassIndex(3);
-		 
-		 
-		 
-		 
+		 isTrainingSet.setClassIndex(3);	//background color 
+		 		 
 		 
 		 // Create the instance
 		 Instance iExample = new DenseInstance(4);
-		 iExample.setValue((Attribute)fvWekaAttributes.get(0), 1.0);
-		 iExample.setValue((Attribute)fvWekaAttributes.get(1), 0.5);
-		 iExample.setValue((Attribute)fvWekaAttributes.get(2), "tomate");
-		 iExample.setValue((Attribute)fvWekaAttributes.get(3), "positive");
-		 
+		 iExample.setValue((Attribute)fvWekaAttributes.get(0), 0);
+		 iExample.setValue((Attribute)fvWekaAttributes.get(1), 0);
 		 // add the instance
 		 isTrainingSet.add(iExample);
 		 
 		 
 		 
+		 //Contruction d'un arbre
 		 
-		 
-		 
-		 
-		 // Create a naïve bayes classifier
-		 Classifier cModel = (Classifier)new NaiveBayes();
-		 cModel.buildClassifier(isTrainingSet);
-		 
-		 
-		 
-		 
-		 
-		 
-		// Test the model
-		 Evaluation eTest = new Evaluation(isTrainingSet);
-		 eTest.evaluateModel(cModel, isTestingSet);
-		 
-		 
-		 
-		// Print the result à la Weka explorer:
-		 String strSummary = eTest.toSummaryString();
-		 System.out.println(strSummary);
-		 
-		 // Get the confusion matrix
-		 double[][] cmMatrix = eTest.confusionMatrix();
-		 
-		 
-		 
-		 
-		// Specify that the instance belong to the training set
-		 // in order to inherit from the set description
-		 iUse.setDataset(isTrainingSet);
-		 
-		 // Get the likelihood of each classes
-		 // fDistribution[0] is the probability of being "positive"
-		 // fDistribution[1] is the probability of being "negative"
-		 double[] fDistribution = cModel.distributionForInstance(iUse);
+		 J48 cls = new J48();	     
+	     cls.buildClassifier(isTrainingSet);
+	 
+	     // display classifier
+	     final javax.swing.JFrame jf = 
+	       new javax.swing.JFrame("Karim affiche toi ou t'es un homme mort");
+	     jf.setSize(500,400);
+	     jf.getContentPane().setLayout(new BorderLayout());
+	     TreeVisualizer tv = new TreeVisualizer(null,
+	         cls.graph(),
+	         new PlaceNode2());
+	     jf.getContentPane().add(tv, BorderLayout.CENTER);
+	     jf.addWindowListener(new java.awt.event.WindowAdapter() {
+	       public void windowClosing(java.awt.event.WindowEvent e) {
+	         jf.dispose();
+	       }
+	     });
+	 
+	     jf.setVisible(true);
+	     tv.fitToScreen();
+
 
 		 System.out.println("cancer");
-		 */
 	}
 	
 	
