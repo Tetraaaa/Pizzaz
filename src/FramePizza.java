@@ -24,11 +24,14 @@ import javax.swing.JPanel;
 import weka.classifiers.Classifier;
 import weka.classifiers.Evaluation;
 import weka.classifiers.bayes.NaiveBayes;
+import weka.classifiers.trees.J48;
 import weka.core.Attribute;
 import weka.core.DenseInstance;
 import weka.core.FastVector;
 import weka.core.Instance;
 import weka.core.Instances;
+import weka.gui.treevisualizer.PlaceNode2;
+import weka.gui.treevisualizer.TreeVisualizer;
 
 @SuppressWarnings("serial")
 public class FramePizza extends JFrame
@@ -65,12 +68,9 @@ public class FramePizza extends JFrame
 							j.setIcon(new ImageIcon("src/Assets/red_bg.png"));
 							
 						}
-						for(Component c : panelPizzas.getComponents())
+						for(Pizza p : listePizzas)
 						{
-							if(c.getClass() == JLayeredPane.class)
-							{
-								c.setBackground(Color.RED);
-							}
+							p.setSelected(false);
 						}
 						
 					}
@@ -82,10 +82,114 @@ public class FramePizza extends JFrame
 
 					@Override
 					public void actionPerformed(ActionEvent e) {
-						System.out.println("sa fé rien mdr");
-						
+						//////////////////////////////////////////////////////////////////////////////
+						//Weka cancer
+						//////////////////////////////////////////////////////////////////////////////		 
+						 
+						 // Declare a nominal attribute along with its values
+						 FastVector fvSauce = new FastVector(4);
+						 fvSauce.addElement("tomate");
+						 fvSauce.addElement("barbecue");
+						 fvSauce.addElement("cremefraiche");
+						 fvSauce.addElement("pasdesauce");
+						 Attribute attributSauce = new Attribute("sauce", fvSauce);
+						 
+						 // Declare the class attribute along with its values
+						 FastVector fvMozzacrust = new FastVector(2);
+						 fvMozzacrust.addElement("false");
+						 fvMozzacrust.addElement("true");
+						 Attribute attributMozza = new Attribute("mozzacrust", fvMozzacrust);
+						 
+						 FastVector fvJambon = new FastVector(2);
+						 fvJambon.addElement("false");
+						 fvJambon.addElement("true");
+						 Attribute attributJambon = new Attribute("jambon", fvJambon);
+						 
+						 FastVector fvFromage = new FastVector(2);
+						 fvFromage.addElement("false");
+						 fvFromage.addElement("true");
+						 Attribute attributFromage = new Attribute("fromage", fvFromage);
+						 
+						 FastVector fvChampignon = new FastVector(2);
+						 fvChampignon.addElement("false");
+						 fvChampignon.addElement("true");
+						 Attribute attributChampi = new Attribute("champignon", fvChampignon);
+						 
+						 FastVector fvOlive = new FastVector(2);
+						 fvOlive.addElement("false");
+						 fvOlive.addElement("true");
+						 Attribute attributOlive = new Attribute("olives", fvOlive);
+						 
+						 FastVector fvSelected = new FastVector(2);
+						 fvSelected.addElement("false");
+						 fvSelected.addElement("true");
+						 Attribute attributSelected = new Attribute("selected", fvSelected);
+						 
+						 // Declare the feature vector
+						 FastVector fvWekaAttributes = new FastVector(7);
+						 fvWekaAttributes.addElement(attributSauce);
+						 fvWekaAttributes.addElement(attributMozza);
+						 fvWekaAttributes.addElement(attributJambon);
+						 fvWekaAttributes.addElement(attributFromage);
+						 fvWekaAttributes.addElement(attributChampi);
+						 fvWekaAttributes.addElement(attributOlive);
+						 fvWekaAttributes.addElement(attributSelected);
+						 
+						 
+						 
+						// Create an empty training set
+						 Instances isTrainingSet = new Instances("Rel", fvWekaAttributes, 10);
+						 // Set class index
+						 isTrainingSet.setClassIndex(6);	//selected 
+						 		 
+						 
+						 // Create the instance
+						 for(Pizza p : listePizzas)
+						 {
+							 Instance i = p.setInstance();
+							 // add the instance
+							 isTrainingSet.add(i);
+						 }
+
+						 
+						 
+						 
+						 //Contruction d'un arbre
+						 
+						 J48 cls = new J48();	     
+					     try {
+							cls.buildClassifier(isTrainingSet);
+						} catch (Exception e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
+					 
+					     // display classifier
+					     final javax.swing.JFrame jf = 
+					       new javax.swing.JFrame("Karim affiche toi ou t'es un homme mort");
+					     jf.setSize(500,400);
+					     jf.getContentPane().setLayout(new BorderLayout());
+					     TreeVisualizer tv;
+						try {
+							tv = new TreeVisualizer(null,
+							     cls.graph(),
+							     new PlaceNode2());
+						     jf.getContentPane().add(tv, BorderLayout.CENTER);
+						     jf.addWindowListener(new java.awt.event.WindowAdapter() {
+						       public void windowClosing(java.awt.event.WindowEvent e) {
+						         jf.dispose();
+						       }
+						     });
+						 
+						     jf.setVisible(true);
+						     tv.fitToScreen();
+						} catch (Exception e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
 					}
-			
+					
+						
 				});
 		
 		panelBoutons.add(btnReset, BorderLayout.LINE_START);
@@ -108,75 +212,17 @@ public class FramePizza extends JFrame
 		setExtendedState(JFrame.MAXIMIZED_BOTH);
 		setLocationRelativeTo(null);
 		setVisible(true);
+	}
 	
-		//////////////////////////////////////////////////////////////////////////////
-		//Weka cancer
-		//////////////////////////////////////////////////////////////////////////////
-		
-			
-		 
-		 
-		 // Declare a nominal attribute along with its values
-		 FastVector fvSauce = new FastVector(4);
-		 fvSauce.addElement("tomate");
-		 fvSauce.addElement("barbecue");
-		 fvSauce.addElement("cremefraiche");
-		 fvSauce.addElement("pasdesauce");
-		 Attribute attributSauce = new Attribute("sauce", fvSauce);
-		 
-		 // Declare the class attribute along with its values
-		 FastVector fvMozzacrust = new FastVector(2);
-		 fvMozzacrust.addElement("true");
-		 fvMozzacrust.addElement("false");
-		 Attribute attributMozza = new Attribute("mozzacrust", fvMozzacrust);
-		 
-		 // Declare the feature vector
-		 FastVector fvWekaAttributes = new FastVector(2);
-		 fvWekaAttributes.addElement(attributSauce);
-		 fvWekaAttributes.addElement(attributMozza);
-		 
-		 
-		 
-		// Create an empty training set
-		 Instances isTrainingSet = new Instances("Rel", fvWekaAttributes, 10);
-		 // Set class index
-		 isTrainingSet.setClassIndex(3);	//background color 
-		 		 
-		 
-		 // Create the instance
-		 Instance iExample = new DenseInstance(4);
-		 iExample.setValue((Attribute)fvWekaAttributes.get(0), 0);
-		 iExample.setValue((Attribute)fvWekaAttributes.get(1), 0);
-		 // add the instance
-		 isTrainingSet.add(iExample);
-		 
-		 
-		 
-		 //Contruction d'un arbre
-		 
-		 J48 cls = new J48();	     
-	     cls.buildClassifier(isTrainingSet);
-	 
-	     // display classifier
-	     final javax.swing.JFrame jf = 
-	       new javax.swing.JFrame("Karim affiche toi ou t'es un homme mort");
-	     jf.setSize(500,400);
-	     jf.getContentPane().setLayout(new BorderLayout());
-	     TreeVisualizer tv = new TreeVisualizer(null,
-	         cls.graph(),
-	         new PlaceNode2());
-	     jf.getContentPane().add(tv, BorderLayout.CENTER);
-	     jf.addWindowListener(new java.awt.event.WindowAdapter() {
-	       public void windowClosing(java.awt.event.WindowEvent e) {
-	         jf.dispose();
-	       }
-	     });
-	 
-	     jf.setVisible(true);
-	     tv.fitToScreen();
 
-
-		 System.out.println("cancer");
+	
+	public Pizza getPizza(JLayeredPane pa)
+	{
+		for(Pizza p : listePizzas)
+		{
+			if(p.getPanel() == pa) return p;
+		}
+		return null;
 	}
 	
 	
@@ -195,11 +241,11 @@ public class FramePizza extends JFrame
 		this.listePizzas = Pizza.generePizza(nb);
 		for (Pizza p : listePizzas)
 		{
+			p.setSelected(false);
 			JLayeredPane jp = new JLayeredPane();
-			jp.setBackground(Color.RED);
+			p.setPanel(jp);
 			jp.setToolTipText(p.toString());
 			jp.setSize(width/10,height/4);
-			System.out.println("width : " + jp.getWidth() + " height : " + jp.getHeight());
 			
 			
 			ArrayList<JLabel> layers = new ArrayList<JLabel>();
@@ -290,16 +336,15 @@ public class FramePizza extends JFrame
 					{
 				public void mouseClicked(MouseEvent e)
 				{
-					if(jp.getBackground() == Color.RED)
+					if(!(getPizza(jp).getSelected()))
 					{
 						image.setIcon(new ImageIcon("src/Assets/green_bg.png"));
-						jp.setBackground(Color.GREEN);
-						System.out.println(jp.getToolTipText());
+						getPizza(jp).setSelected(true);
 					}
 					else
 					{
 						image.setIcon(new ImageIcon("src/Assets/red_bg.png"));
-						jp.setBackground(Color.RED);
+						getPizza(jp).setSelected(false);
 					}
 				}
 					});

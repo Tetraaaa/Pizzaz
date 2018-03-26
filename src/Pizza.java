@@ -1,6 +1,11 @@
 import java.util.ArrayList;
 import java.util.Random;
 
+import javax.swing.JLayeredPane;
+
+import weka.core.DenseInstance;
+import weka.core.Instance;
+
 public class Pizza {
 	private Boolean grandeTaille;	//Si faux : pizza de taille normale
 	private Boolean mozzaCrust;	
@@ -8,6 +13,8 @@ public class Pizza {
 	private Boolean jambon;
 	private Boolean fromage;
 	private Boolean champignon;
+	private boolean selected = false;
+	private JLayeredPane panel;
 	
 	public Pizza(Boolean grandeTaille, Boolean mozzaCrust, Sauce sauce, Boolean jambon, Boolean fromage, Boolean champignon) {
 		this.grandeTaille = grandeTaille;
@@ -97,7 +104,101 @@ public class Pizza {
 		this.champignon = champignon;
 	}	
 	
+	public boolean getSelected()
+	{
+		return selected;
+	}
 	
+	public void setSelected(boolean s)
+	{
+		this.selected = s;
+	}
+	
+	public JLayeredPane getPanel()
+	{
+		return this.panel;
+	}
+	
+	public void setPanel(JLayeredPane p)
+	{
+		this.panel = p;
+	}
+	
+	public Instance setInstance()
+	{
+		Instance i = new DenseInstance(7);
+		if(getSauce() == Sauce.PasDeSauce)
+		{
+			i.setValue(0, 3);
+		}
+		else if(getSauce() == Sauce.Tomate)
+		{
+			i.setValue(0, 0);
+		}
+		else if(getSauce() == Sauce.Fraiche)
+		{
+			i.setValue(0, 2);
+		}
+		else
+		{
+			i.setValue(0, 1);
+		}
+		
+		if(getMozzaCrust())
+		{
+			i.setValue(1, 1);
+		}
+		else
+		{
+			i.setValue(1, 0);
+		}
+		
+		if(jambon)
+		{
+			i.setValue(2, 1);
+		}
+		else
+		{
+			i.setValue(2, 0);
+		}
+		
+		if(fromage)
+		{
+			i.setValue(3, 1);
+		}
+		else
+		{
+			i.setValue(3, 0);
+		}
+		
+		if(champignon)
+		{
+			i.setValue(4, 1);
+		}
+		else
+		{
+			i.setValue(4, 0);
+		}
+		if(grandeTaille)
+		{
+			i.setValue(5, 1);
+		}
+		else
+		{
+			i.setValue(5, 0);
+		}
+		
+		if(selected)
+		{
+			i.setValue(6, 1);
+		}
+		else
+		{
+			i.setValue(6, 0);
+		}
+		
+		return i;	
+	}
 	
 }
 
