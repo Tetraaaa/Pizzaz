@@ -1,7 +1,4 @@
 import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GraphicsEnvironment;
 import java.awt.GridLayout;
@@ -21,13 +18,8 @@ import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
 
-import weka.classifiers.Classifier;
-import weka.classifiers.Evaluation;
-import weka.classifiers.bayes.NaiveBayes;
 import weka.classifiers.trees.J48;
 import weka.core.Attribute;
-import weka.core.DenseInstance;
-import weka.core.FastVector;
 import weka.core.Instance;
 import weka.core.Instances;
 import weka.gui.treevisualizer.PlaceNode2;
@@ -87,53 +79,53 @@ public class FramePizza extends JFrame
 						//////////////////////////////////////////////////////////////////////////////		 
 						 
 						 // Declare a nominal attribute along with its values
-						 FastVector fvSauce = new FastVector(4);
-						 fvSauce.addElement("tomate");
-						 fvSauce.addElement("barbecue");
-						 fvSauce.addElement("cremefraiche");
-						 fvSauce.addElement("pasdesauce");
+						 ArrayList<String> fvSauce = new ArrayList<String>();
+						 fvSauce.add("tomate");
+						 fvSauce.add("barbecue");
+						 fvSauce.add("cremefraiche");
+						 fvSauce.add("pasdesauce");
 						 Attribute attributSauce = new Attribute("sauce", fvSauce);
 						 
 						 // Declare the class attribute along with its values
-						 FastVector fvMozzacrust = new FastVector(2);
-						 fvMozzacrust.addElement("false");
-						 fvMozzacrust.addElement("true");
+						 ArrayList<String> fvMozzacrust = new ArrayList<String>();
+						 fvMozzacrust.add("false");
+						 fvMozzacrust.add("true");
 						 Attribute attributMozza = new Attribute("mozzacrust", fvMozzacrust);
 						 
-						 FastVector fvJambon = new FastVector(2);
-						 fvJambon.addElement("false");
-						 fvJambon.addElement("true");
+						 ArrayList<String> fvJambon = new ArrayList<String>();
+						 fvJambon.add("false");
+						 fvJambon.add("true");
 						 Attribute attributJambon = new Attribute("jambon", fvJambon);
 						 
-						 FastVector fvFromage = new FastVector(2);
-						 fvFromage.addElement("false");
-						 fvFromage.addElement("true");
+						 ArrayList<String> fvFromage = new ArrayList<String>();
+						 fvFromage.add("false");
+						 fvFromage.add("true");
 						 Attribute attributFromage = new Attribute("fromage", fvFromage);
 						 
-						 FastVector fvChampignon = new FastVector(2);
-						 fvChampignon.addElement("false");
-						 fvChampignon.addElement("true");
+						 ArrayList<String> fvChampignon = new ArrayList<String>();
+						 fvChampignon.add("false");
+						 fvChampignon.add("true");
 						 Attribute attributChampi = new Attribute("champignon", fvChampignon);
 						 
-						 FastVector fvOlive = new FastVector(2);
-						 fvOlive.addElement("false");
-						 fvOlive.addElement("true");
+						 ArrayList<String> fvOlive = new ArrayList<String>();
+						 fvOlive.add("false");
+						 fvOlive.add("true");
 						 Attribute attributOlive = new Attribute("olives", fvOlive);
 						 
-						 FastVector fvSelected = new FastVector(2);
-						 fvSelected.addElement("false");
-						 fvSelected.addElement("true");
+						 ArrayList<String> fvSelected = new ArrayList<String>();
+						 fvSelected.add("false");
+						 fvSelected.add("true");
 						 Attribute attributSelected = new Attribute("selected", fvSelected);
 						 
 						 // Declare the feature vector
-						 FastVector fvWekaAttributes = new FastVector(7);
-						 fvWekaAttributes.addElement(attributSauce);
-						 fvWekaAttributes.addElement(attributMozza);
-						 fvWekaAttributes.addElement(attributJambon);
-						 fvWekaAttributes.addElement(attributFromage);
-						 fvWekaAttributes.addElement(attributChampi);
-						 fvWekaAttributes.addElement(attributOlive);
-						 fvWekaAttributes.addElement(attributSelected);
+						 ArrayList<Attribute> fvWekaAttributes = new ArrayList<Attribute>();
+						 fvWekaAttributes.add(attributSauce);
+						 fvWekaAttributes.add(attributMozza);
+						 fvWekaAttributes.add(attributJambon);
+						 fvWekaAttributes.add(attributFromage);
+						 fvWekaAttributes.add(attributChampi);
+						 fvWekaAttributes.add(attributOlive);
+						 fvWekaAttributes.add(attributSelected);
 						 
 						 
 						 
@@ -147,7 +139,6 @@ public class FramePizza extends JFrame
 						 for(Pizza p : listePizzas)
 						 {
 							 Instance i = p.setInstance();
-							 // add the instance
 							 isTrainingSet.add(i);
 						 }
 
@@ -166,8 +157,8 @@ public class FramePizza extends JFrame
 					 
 					     // display classifier
 					     final javax.swing.JFrame jf = 
-					       new javax.swing.JFrame("Karim affiche toi ou t'es un homme mort");
-					     jf.setSize(500,400);
+					       new javax.swing.JFrame("Arbre");
+					     jf.setSize(1920,1080);
 					     jf.getContentPane().setLayout(new BorderLayout());
 					     TreeVisualizer tv;
 						try {
@@ -175,13 +166,18 @@ public class FramePizza extends JFrame
 							     cls.graph(),
 							     new PlaceNode2());
 						     jf.getContentPane().add(tv, BorderLayout.CENTER);
+						     tv.setSize(1920, 1080);
+						    
+						     tv.fitToScreen();
 						     jf.addWindowListener(new java.awt.event.WindowAdapter() {
 						       public void windowClosing(java.awt.event.WindowEvent e) {
 						         jf.dispose();
 						       }
 						     });
-						 
+						
 						     jf.setVisible(true);
+						     jf.setLocationRelativeTo(null);
+						     jf.setExtendedState(JFrame.MAXIMIZED_BOTH); 
 						     tv.fitToScreen();
 						} catch (Exception e1) {
 							// TODO Auto-generated catch block
